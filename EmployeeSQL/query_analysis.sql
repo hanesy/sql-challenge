@@ -4,7 +4,8 @@ DROP VIEW IF EXISTS emp_sal;
 CREATE VIEW emp_sal AS
 SELECT employees.emp_no, employees.last_name, employees.first_name, employees.gender, salaries.salary
 FROM employees 
-LEFT JOIN salaries ON employees.emp_no = salaries.emp_no;
+LEFT JOIN salaries ON employees.emp_no = salaries.emp_no
+ORDER BY employees.emp_no;
 
 SELECT * FROM emp_sal;
 
@@ -14,8 +15,9 @@ DROP VIEW IF EXISTS emp_1986;
 CREATE VIEW emp_1986 AS
 SELECT *
 FROM employees 
-WHERE hire_date BETWEEN '1986-01-01' AND '1986-12-31';
--- Why won't YEAR(hire_date) = 1986 work?
+--selection of dates is inclusive--
+WHERE hire_date BETWEEN '1986-01-01' AND '1986-12-31'
+ORDER BY employees.emp_no;
 
 SELECT * FROM emp_1986;
 
@@ -24,10 +26,12 @@ DROP VIEW IF EXISTS dept_man_info;
 
 CREATE VIEW dept_man_info AS
 SELECT dept_manager.dept_no, departments.dept_name, dept_manager.emp_no, 
-employees.last_name, employees.first_name, dept_manager.from_date AS "start_date", dept_manager.to_date AS "end_date"
+employees.last_name, employees.first_name, 
+dept_manager.from_date AS "start_date_asmanager", dept_manager.to_date AS "end_date_asmanager"
 FROM dept_manager 
 LEFT JOIN departments ON dept_manager.dept_no = departments.dept_no
-LEFT JOIN employees ON dept_manager.emp_no = employees.emp_no;
+LEFT JOIN employees ON dept_manager.emp_no = employees.emp_no
+ORDER BY dept_manager.dept_no;
 
 SELECT * FROM dept_man_info;
 
@@ -38,7 +42,8 @@ CREATE VIEW emp_dept_info AS
 SELECT dept_emp.emp_no, employees.last_name, employees.first_name, departments.dept_name
 FROM dept_emp 
 LEFT JOIN employees ON dept_emp.emp_no = employees.emp_no
-LEFT JOIN departments ON dept_emp.dept_no = departments.dept_no;
+LEFT JOIN departments ON dept_emp.dept_no = departments.dept_no
+ORDER BY dept_emp.emp_no;
 
 SELECT * FROM emp_dept_info;
 
@@ -49,7 +54,8 @@ CREATE VIEW emp_herc_b AS
 SELECT *
 FROM employees 
 WHERE first_name = 'Hercules' 
-AND last_name LIKE 'B%';
+AND last_name LIKE 'B%'
+ORDER BY emp_no;
 
 SELECT * FROM emp_herc_b;
 
@@ -57,22 +63,12 @@ SELECT * FROM emp_herc_b;
 DROP VIEW IF EXISTS emp_sales_info;
 
 CREATE VIEW emp_sales_info AS
-SELECT emp_no, last_name, first_name, dept_name
---run query from question 4
-FROM emp_dept_info 
-WHERE dept_name = 'Sales';
-
-SELECT * FROM emp_sales_info;
-
---Another Option
-DROP VIEW IF EXISTS emp_sales_info;
-
-CREATE VIEW emp_sales_info AS
 SELECT dept_emp.emp_no, employees.last_name, employees.first_name, departments.dept_name
 FROM dept_emp 
 LEFT JOIN employees ON dept_emp.emp_no = employees.emp_no
 LEFT JOIN departments ON dept_emp.dept_no = departments.dept_no
-WHERE dept_name = 'Sales';
+WHERE dept_name = 'Sales'
+ORDER BY dept_emp.emp_no;
 
 SELECT * FROM emp_sales_info;
 
@@ -80,24 +76,13 @@ SELECT * FROM emp_sales_info;
 DROP VIEW IF EXISTS emp_salesdev_info;
 
 CREATE VIEW emp_salesdev_info AS
-SELECT emp_no, last_name, first_name, dept_name
---run query from question 4
-FROM emp_dept_info 
-WHERE dept_name = 'Sales'
-OR dept_name = 'Development';
-
-SELECT * FROM emp_salesdev_info;
-
---Another Option
-DROP VIEW IF EXISTS emp_salesdev_info;
-
-CREATE VIEW emp_salesdev_info AS
 SELECT dept_emp.emp_no, employees.last_name, employees.first_name, departments.dept_name
 FROM dept_emp 
 LEFT JOIN employees ON dept_emp.emp_no = employees.emp_no
 LEFT JOIN departments ON dept_emp.dept_no = departments.dept_no
 WHERE dept_name = 'Sales'
-OR dept_name = 'Development';
+OR dept_name = 'Development'
+ORDER BY dept_emp.emp_no;
 
 SELECT * FROM emp_salesdev_info;
 
